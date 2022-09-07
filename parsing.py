@@ -18,7 +18,6 @@ def get_html(url, params=''):
     return r
 
 
-
 def get_content(html):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find('div', class_='_025a50318d--c-popular-block-wrap--WNSeg cg-row').find_all('div', class_='_025a50318d--c-popular-info--HRsb6')
@@ -29,8 +28,7 @@ def get_content(html):
             {
                 'square': int(''.join(filter(lambda x: x.isdigit(), item.find('span', class_='_025a50318d--c-popular-tec-info--yVLGS').get_text(strip=True)))[1:-1]),
                 'adress': item.find('span', class_='_025a50318d--c-popular-metro-name--tOQHQ').get_text(strip=True),
-                'price': int(''.join(filter(lambda x: x.isdigit(), item.find('span', class_='_025a50318d--c-popular-price--X7UPE').get_text(strip=True))))             
-
+                'price': int(''.join(filter(lambda x: x.isdigit(), item.find('span', class_='_025a50318d--c-popular-price--X7UPE').get_text(strip=True))))
             }
         )
     #print(cards)
@@ -43,11 +41,11 @@ def save_doc(items, path):
         for item in items:
             writer.writerow([item['adress'], item['square'], item['price']])
             
-
             
 def calc_average(flats):
     square_sum = 0
     price_sum = 0
+    
     for i in flats:
         square_sum += i['square']
         price_sum += i['price']
@@ -66,7 +64,6 @@ def calc_by_pandas():
     print(f'\nPandas: Средняя стоимость за квадратный метр: {av} руб.')
     print(f'Pandas: Средняя стоимость квартиры: {avf} руб.')
     
-
 
 html = get_html(URL)
 flats = get_content(html.text)
