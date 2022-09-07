@@ -18,7 +18,7 @@ def get_html(url, params=''):
     return r
 
 
-def get_content(html): #Парсим HTML с помощью селекторов
+def get_content(html): #Парсим HTML с помощью BS4
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find('div', class_='_025a50318d--c-popular-block-wrap--WNSeg cg-row').find_all('div', class_='_025a50318d--c-popular-info--HRsb6')
     cards = []
