@@ -18,12 +18,12 @@ def get_html(url, params=''):
     return r
 
 
-def get_content(html):
+def get_content(html): #Парсим HTML с помощью селекторов
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find('div', class_='_025a50318d--c-popular-block-wrap--WNSeg cg-row').find_all('div', class_='_025a50318d--c-popular-info--HRsb6')
     cards = []
 
-    for item in items:
+    for item in items: #Для каждой карточки квартиры вытаскиваем данные и нормируем с помощью функционального подхода
         cards.append(
             {
                 'square': int(''.join(filter(lambda x: x.isdigit(), item.find('span', class_='_025a50318d--c-popular-tec-info--yVLGS').get_text(strip=True)))[1:-1]),
@@ -31,18 +31,17 @@ def get_content(html):
                 'price': int(''.join(filter(lambda x: x.isdigit(), item.find('span', class_='_025a50318d--c-popular-price--X7UPE').get_text(strip=True))))
             }
         )
-    #print(cards)
     return cards
 
-def save_doc(items, path):
+def save_doc(items, path): #Сохраняем данные в файл
     with open(path, 'w', newline='') as file:
         writer = csv.writer(file, delimiter=';')
         writer.writerow(['Адрес', 'Площадь м2', 'Стоимость'])
         for item in items:
             writer.writerow([item['adress'], item['square'], item['price']])
             
-            
-def calc_average(flats):
+
+def calc_average(flats): #Функция считает среднее
     square_sum = 0
     price_sum = 0
     
@@ -50,20 +49,21 @@ def calc_average(flats):
         square_sum += i['square']
         price_sum += i['price']
 
-    average_price_sq2 = round(price_sum / square_sum)
-    average_price_flat = round(price_sum / len(flats))
-    print(f'\nPython: Средняя стоимость за квадратный метр: {average_price_sq2} руб.')
+    average_price_sq2 = round(price_sum / square_sum) #определяем среднюю стоимость м2
+    average_price_flat = round(price_sum / len(flats)) #определяем среднюю стоимость квартиры
+    print(f'\nPython: Средняя стоимость за квадратный метр: {average_price_sq2} руб.') 
     print(f'Python: Средняя стоимость квартиры: {average_price_flat} руб.')
 
-
+#Считаем среднее с помощью Pandas
 def calc_by_pandas():
-    data = pd.read_csv('database.csv', encoding='cp1251', delimiter=';')
+    data = pd.read_csv('database.csv', encoding='cp1251', delimiter=';') #читаем данные из файла
     print(data, '\n')
-    av = round(data['Стоимость'].mean() / data['Площадь м2'].mean())
-    avf = round(data['Стоимость'].mean())
-    print(f'\nPandas: Средняя стоимость за квадратный метр: {av} руб.')
-    print(f'Pandas: Средняя стоимость квартиры: {avf} руб.')
+    av = round(data['Стоимость'].mean() / data['Площадь м2'].mean()) #определяем среднюю стоимость м2
+    avf = round(data['Стоимость'].mean()) #определяем среднюю стоимость квартиры
     
+    #выводим данные на экран
+    print(f'\nPandas: Средняя стоимость за квадратный метр: {av} руб.')
+    print(f'Pandas: Средняя стоимость квартиры: {avf} руб.')    
 
 html = get_html(URL)
 flats = get_content(html.text)
