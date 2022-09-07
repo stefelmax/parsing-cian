@@ -73,6 +73,3 @@ flats = get_content(html.text)
 save_doc(flats, PATH)
 calc_by_pandas()
 calc_average(flats)
-
-
-
